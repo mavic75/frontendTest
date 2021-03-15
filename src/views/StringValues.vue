@@ -11,11 +11,11 @@
                         <div class="form-row ">
                             <div class="col-6">
                                 <label for="inlineFormInput" class="col text-center"><strong>Input</strong></label>
-                                <textarea class="form-control" id="input-1" rows="8"></textarea>
+                                <textarea class="form-control" id="input-3" rows="8"></textarea>
                             </div>
                             <div class="col-6">
                                 <label for="inlineFormInput" class="col text-center"><strong>Output</strong></label>
-                                <pre id="output-1" ></pre>
+                                <pre id="output-3" ></pre>
                             </div>
                         </div>
                         <div class="mt-3">

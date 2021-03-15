@@ -16,9 +16,30 @@
     
 </template>
 <script>
-
+import axios from "axios"
 export default {
     name : 'Dashboard', 
+    mounted() {
+        this.getIndex();
+    },
+    data() {
+        return {
+            error: []
+        }
+    },
+    methods: {
+        getIndex() {
+                this.isBusy = true;
+                axios.get('/api/demo')
+                    .then(response => {
+                        console.log(response.data);
+                        
+                    })
+                    .catch(error => {
+                        console.log(error);
+                    });
+            },
+    },
 
     components : {
         

@@ -6,21 +6,21 @@
                     <h2 class="title">Padel</h2>
                 </div>
                 <div class="card-body">
-                    <form action="POST">
-                        
+                    <form >
                         <div class="form-row ">
                             <div class="col-6">
                                 <label for="inlineFormInput" class="col text-center"><strong>Input</strong></label>
-                                <textarea class="form-control" id="input-1" rows="8"></textarea>
+                                <label for="inlineFormInput" class="col text-center"><strong>Do not make a line break at the end of the text</strong></label>
+                                <textarea class="form-control" id="input-1" rows="8" v-model="input1"></textarea>
                             </div>
                             <div class="col-6">
                                 <label for="inlineFormInput" class="col text-center"><strong>Output</strong></label>
-                                <pre id="output-1" ></pre>
+                                <pre id="output-1" > </pre>  <!-- {{ res }} -->
                             </div>
                         </div>
                         <div class="mt-3">
-                            <button type="button" class="mr-2 mb-2 btn btn--pill btn-success btn-lg">save</button>
-                            <button type="button" class="mr-2 mb-2 btn btn--pill btn-danger btn-lg">cleaner up</button>
+                            <button type="button" @click="sendData" class="mr-2 mb-2 btn btn--pill btn-success btn-lg">save</button>
+                            <button type="button" @click="resetFields" class="mr-2 mb-2 btn btn--pill btn-danger btn-lg">cleaner up</button>
                         </div>
                     </form>
                 </div>
@@ -31,14 +31,93 @@
 </template>
 <script>
 // import PageFooter from './components/PageFooter.vue'
-// import NavBar from './components/NavBar.vue'
+import axios from "axios"
 export default {
     name : 'Padel',
 
+    mounted() {
+        // this.getIndex();
+    },
+
+    data() {
+        return {
+            input1: '',
+            output1: '',
+            data: [],
+            category: [],
+            partner: [],
+            res:'',
+        }
+    },
+    methods: {
+        getIndex(){
+            // axios.get('/api/demo')
+            //     .then(response => {
+            //         console.log(response.data);
+            //         this.res = response.data;
+            //     })
+            //     .catch(error => {
+            //         console.error(JSON.stringify(error));
+            //     });
+        },
+
+        sendData() {
+            
+            try {
+                this.data = this.input1.split('\n', 54);
+                this.getData(this.data);
+                var info = {
+                    entry: this.data,
+                    data: this.category,
+                    partner: this.partner
+                };
+                console.log(info);   
+                axios.post('/api/winner', info)
+                .then(response => {
+                    console.log(response.data);//this.getIndex();
+                })
+                .catch(error => {
+                    console.error(JSON.stringify(error));
+                });
+            } catch (error) {
+                console.error(error);
+            }
+        },
+
+        getData(info) {
+            // info.forEach(element => {
+            //     if (element != 'FIN' && element.length < 17) {
+            //         this.category.push(element );
+            //     }
+            // });
+            
+            for (let i = 0; i < info.length; i++) {
+                const e = info[i];
+                if (e != 'FIN' && e.length < 17 ) {
+                    this.category.push(e);
+                }
+                
+                if (e != 'FIN' && e.length > 16) {
+                    var h = e.indexOf(' ', 0);
+                    var p = new Object();
+                    p['partner'] = e.slice(' ', h);
+                    p['category'] = this.category.length - 1;
+                    this.partner.push(new Object(p)); 
+                }
+                
+            }
+        },
+        resetFields() {
+            this.input1 = '';
+            this.output1 = '';
+            this.data = [];
+            this.category = [];
+            this.partner = [];
+        }
+    },
 
     components : {
-        // PageFooter,
-        // NavBar
+
     }
 };
 </script>
